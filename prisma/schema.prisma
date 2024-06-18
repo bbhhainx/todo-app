@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// bảng Todo
+model Todo {
+  // id của todo
+  todo_id       String          @id @default(uuid())
+  // tiêu đề của todo
+  title         String
+  // id người dùng
+  user_id       String
+  // người dùng
+  user          User            @relation(fields: [user_id], references: [user_id])
+  // mô tả todo
+  description   String?
+  // trạng thái của todo
+  status        STATUS          @default(PENDING)
+  // thời gian tạo
+  created_at    DateTime        @default(now()) @db.Timestamp(3)
+  // thời gian cập nhật
+  update_at     DateTime        @updatedAt @db.Timestamp(3)
+  Todo_Category Todo_Category[]
+}
+
+// bảng User
+model User {
+  // id người dùng
+  user_id   String     @id @default(uuid())
+  // tên người dùng
+  user_name String
+  // mật khẩu
+  password  String
+  Todo      Todo[]
+  Category  Category[]
+}
+
+// bảng Category
+model Category {
+  // id danh mục
+  category_id   String          @id @default(uuid())
+  // id người dùng
+  user_id       String
+  // người dùng
+  user          User            @relation(fields: [user_id], references: [user_id])
+  // tên danh mục
+  category_name String
+  // mô tả về danh muc
+  description   String
+  // thời gian tạo
+  created_at    DateTime        @default(now()) @db.Timestamp(3)
+  // thời gian cập nhật
+  update_at     DateTime        @updatedAt @db.Timestamp(3)
+  Todo_Category Todo_Category[]
+}
+
+// ánh xạ giữa bảng Todo với bảng Category
+model Todo_Category {
+  // id todo
+  todo_id     String
+  todo        Todo     @relation(fields: [todo_id], references: [todo_id])
+  // id danh mục
+  category_id String
+  category    Category @relation(fields: [category_id], references: [category_id])
+
+  @@id([todo_id, category_id])
+}
+
+enum STATUS {
+  // trạng thái đang thực hiện
+  PENDING
+  // trạng thái đã hoàn thành
+  COMPLETED
+}
