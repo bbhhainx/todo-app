@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UserService } from './user.service';
 import { PrismaService } from './prisma.service';
 import { TodoService } from './todo.service';
+import { CategoryService } from './category.service';
 
 @Module({
   imports: [
@@ -13,6 +14,12 @@ import { TodoService } from './todo.service';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService, UserService, TodoService, PrismaService],
+  providers: [
+    AppService,
+    UserService,
+    TodoService,
+    CategoryService,
+    PrismaService,
+  ],
 })
 export class AppModule {}

@@ -10,10 +10,13 @@ import {
 import { AppService } from './app.service';
 import { User as UserModel } from '@prisma/client';
 import { Todo as TodoModel } from '@prisma/client';
+import { Category as CategoryModel } from '@prisma/client';
 import { UserService } from './user.service';
 import { TodoService } from './todo.service';
 import { UserCreateDTO, UserUpdateDTO } from './user.dto';
 import { TodoCreateDTO } from './todo.dto';
+import { CategoryService } from './category.service';
+import { CategoryCreateDTO } from './category.dto';
 
 @Controller()
 export class AppController {
@@ -21,6 +24,7 @@ export class AppController {
     private readonly appService: AppService,
     private readonly userService: UserService,
     private readonly todoService: TodoService,
+    private readonly categoryService: CategoryService,
   ) {}
 
   /** lấy tất cả tài khoản */
@@ -78,5 +82,38 @@ export class AppController {
   @Delete('todo/:id')
   async deleteTodo(@Param() params: { id: string }): Promise<TodoModel> {
     return this.todoService.deleteTodo({ todo_id: params.id });
+  }
+
+  /** lấy tất cả danh mục */
+  @Get('category')
+  async getAllCategory() {
+    return this.categoryService.categories({});
+  }
+
+  /** tạo danh mục */
+  @Post('category')
+  async createCategory(
+    @Body() categoryData: CategoryCreateDTO,
+  ): Promise<CategoryModel> {
+    return this.categoryService.createCategory(categoryData);
+  }
+
+  /** cập nhật danh mục */
+  @Put('category/:id')
+  async updateCategory(
+    @Body() categoryData: CategoryCreateDTO,
+    @Param() params: { id: string },
+  ): Promise<CategoryModel> {
+    return this.categoryService.updateCategory({
+      where: { category_id: params.id },
+      data: categoryData,
+    });
+  }
+  /** xóa danh mục */
+  @Delete('category/:id')
+  async deleteCategory(
+    @Param() params: { id: string },
+  ): Promise<CategoryModel> {
+    return this.categoryService.deleteCategory({ category_id: params.id });
   }
 }

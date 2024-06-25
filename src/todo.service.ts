@@ -7,6 +7,7 @@ import { TodoCreateDTO } from './todo.dto';
 export class TodoService {
   constructor(private prisma: PrismaService) {}
 
+  /** lấy thông tin 1 todo */
   async todo(
     todoWhereUniqueInput: Prisma.TodoWhereUniqueInput,
   ): Promise<Todo | null> {
@@ -14,6 +15,8 @@ export class TodoService {
       where: todoWhereUniqueInput,
     });
   }
+
+  /** lấy thông tin nhiều todo */
   async todos(params: {
     skip?: number;
     take?: number;
@@ -29,12 +32,14 @@ export class TodoService {
     });
   }
 
+  /** tạo todo */
   async createtTodo(data: TodoCreateDTO): Promise<Todo> {
     return this.prisma.todo.create({
       data,
     });
   }
 
+  /** cập nhật todo */
   async updateTodo(params: {
     where: Prisma.TodoWhereUniqueInput;
     data: TodoCreateDTO;
@@ -46,6 +51,7 @@ export class TodoService {
     });
   }
 
+  /** xóa todo */
   async deleteTodo(where: Prisma.TodoWhereUniqueInput): Promise<Todo> {
     return this.prisma.todo.delete({
       where,

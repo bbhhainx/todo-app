@@ -6,6 +6,7 @@ import { User, Prisma } from '@prisma/client';
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
+  /** lấy thông tin 1 user */
   async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
   ): Promise<User | null> {
@@ -14,6 +15,7 @@ export class UserService {
     });
   }
 
+  /** lấy nhiều user */
   async users(params: {
     skip?: number;
     take?: number;
@@ -29,12 +31,14 @@ export class UserService {
     });
   }
 
+  /** tạo mới user */
   async createUser(data: Prisma.UserCreateInput): Promise<User> {
     return this.prisma.user.create({
       data,
     });
   }
 
+  /** cập nhật user */
   async updateUser(params: {
     where: Prisma.UserWhereUniqueInput;
     data: Prisma.UserUpdateInput;
@@ -46,6 +50,7 @@ export class UserService {
     });
   }
 
+  /** xóa user */
   async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
     return this.prisma.user.delete({
       where,
