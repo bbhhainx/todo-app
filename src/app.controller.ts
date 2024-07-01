@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { User as UserModel } from '@prisma/client';
@@ -17,6 +18,7 @@ import { UserCreateDTO, UserUpdateDTO } from './user.dto';
 import { TodoCreateDTO } from './todo.dto';
 import { CategoryService } from './category.service';
 import { CategoryCreateDTO } from './category.dto';
+import { AuthGuard } from './auth/auth.guard';
 
 @Controller()
 export class AppController {
@@ -55,6 +57,7 @@ export class AppController {
     return this.userService.deleteUser({ user_id: params.id });
   }
 
+  @UseGuards(AuthGuard)
   /** lấy tất cả todo */
   @Get('todo')
   async getAllTodo() {

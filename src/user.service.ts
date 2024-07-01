@@ -6,6 +6,15 @@ import { User, Prisma } from '@prisma/client';
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
+
+  async findOne(username: string): Promise<User | undefined> {
+    return this.prisma.user.findFirst({
+      where: {
+        user_name: username
+      }
+    });
+  }
+
   /** lấy thông tin 1 user */
   async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
