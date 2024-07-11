@@ -9,9 +9,3 @@ export class UserCreateDTO {
   @IsNotEmpty()
   password: string;
 }
-
-export class UserUpdateDTO extends UserCreateDTO {
-  @IsString()
-  @IsNotEmpty()
-  user_id: string;
-}
