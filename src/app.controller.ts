@@ -9,6 +9,7 @@ import {
   Post,
   Put,
   UnauthorizedException,
+  UseFilters,
   UseGuards,
 } from '@nestjs/common';
 import { AppService } from './app.service';
@@ -24,8 +25,10 @@ import { CategoryCreateDTO } from './category.dto';
 import { AuthGuard } from './auth/auth.guard';
 import { Res } from './decorator/response.decorator';
 import { IResponse } from './interface/response';
+import { PrismaClientErrorFilter } from './filters/prisma-exception.filter';
 
 @Controller()
+@UseFilters(new PrismaClientErrorFilter())
 export class AppController {
   constructor(
     private readonly appService: AppService,
@@ -83,13 +86,14 @@ export class AppController {
   async deleteUser(
     @Res() res: IResponse,
     @Param() params: { id: string },
-  ): Promise<void> {
-    try {
-      const user = await this.userService.deleteUser({ user_id: params.id });
-      res.ok(user);
-    } catch (error) {
-      res.err(error);
-    }
+  ): Promise<any> {
+    // try {
+    const user = await this.userService.deleteUser({ user_id: params.id });
+    return user;
+    //   res.ok(user);
+    // } catch (error) {
+    //   res.err(error);
+    // }
   }
 
   /** lấy tất cả todo */

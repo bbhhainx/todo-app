@@ -1,17 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseFilters } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { User, Prisma } from '@prisma/client';
+import { PrismaClientErrorFilter } from './filters/prisma-exception.filter';
 
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-
   async findOne(username: string): Promise<User | undefined> {
     return this.prisma.user.findFirst({
       where: {
-        user_name: username
-      }
+        user_name: username,
+      },
     });
   }
 
@@ -58,9 +58,12 @@ export class UserService {
       where,
     });
   }
-
+  @UseFilters(new PrismaClientErrorFilter())
   /** xóa user */
   async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
+    await this.prisma.user.findUniqueOrThrow({
+      where,
+    });
     return this.prisma.user.delete({
       where,
     });

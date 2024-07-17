@@ -17,12 +17,11 @@ import { AuthModule } from './auth/auth.module';
   ],
   controllers: [AppController],
   providers: [
-    
+    PrismaService,
     AppService,
     UserService,
     TodoService,
     CategoryService,
-    PrismaService,
   ],
 })
 export class AppModule {}

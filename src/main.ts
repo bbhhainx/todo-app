@@ -11,8 +11,8 @@ async function bootstrap() {
       whitelist: true, // When Whitelist is set to true, You will not be allowed to send additional props apart from DTO Property
     }),
   );
-  const httpAdapter = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  // app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
   await app.listen(3000);
 }
 bootstrap();
