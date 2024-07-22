@@ -1,10 +1,10 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { jwtConstants } from '../constants';
-import { UserService } from 'src/user.service';
-import { PrismaService } from 'src/prisma.service';
+import { UserService } from 'src/user/user.service';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [
@@ -13,9 +13,10 @@ import { PrismaService } from 'src/prisma.service';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '600s' },
     }),
+    forwardRef(() => UserModule),
   ],
 
-  providers: [AuthService, UserService, PrismaService],
+  providers: [AuthService],
   controllers: [AuthController],
   exports: [AuthService],
 })

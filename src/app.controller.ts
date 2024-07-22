@@ -16,9 +16,9 @@ import { AppService } from './app.service';
 import { User as UserModel } from '@prisma/client';
 import { Todo as TodoModel } from '@prisma/client';
 import { Category as CategoryModel } from '@prisma/client';
-import { UserService } from './user.service';
+import { UserService } from './user/user.service';
 import { TodoService } from './todo.service';
-import { UserCreateDTO } from './user.dto';
+import { UserCreateDTO } from './user/user.dto';
 import { TodoCreateDTO } from './todo.dto';
 import { CategoryService } from './category.service';
 import { CategoryCreateDTO } from './category.dto';
@@ -36,65 +36,6 @@ export class AppController {
     private readonly todoService: TodoService,
     private readonly categoryService: CategoryService,
   ) {}
-
-  /** lấy tất cả tài khoản */
-  @Get('user')
-  @UseGuards(AuthGuard)
-  @HttpCode(HttpStatus.OK)
-  async getAllUser(@Res() res: IResponse): Promise<any> {
-    const user = await this.userService.users({});
-    return user;
-  }
-
-  /** tạo mới tài khoản người dùng */
-  @Post('user')
-  @UseGuards(AuthGuard)
-  async signupUser(
-    @Res() res: IResponse,
-    @Body() userData: UserCreateDTO,
-  ): Promise<void> {
-    try {
-      const user = await this.userService.createUser(userData);
-
-      if (!user) throw 'Tạo tài khoản mới thất bại';
-      res.ok(user); // Trả về response thành công với user
-    } catch (error) {
-      res.err(error); // Trả về response lỗi với thông báo lỗi
-    }
-  }
-  /** cập nhật tài khoản */
-  @Put('user/:id')
-  @UseGuards(AuthGuard)
-  async updateUser(
-    @Res() res: IResponse,
-    @Body() userData: UserCreateDTO,
-    @Param() params: { id: string },
-  ): Promise<void> {
-    try {
-      const user = await this.userService.updateUser({
-        where: { user_id: params.id },
-        data: userData,
-      });
-      res.ok(user);
-    } catch (error) {
-      res.err(error);
-    }
-  }
-  /** xóa tài khoản */
-  @Delete('user/:id')
-  @UseGuards(AuthGuard)
-  async deleteUser(
-    @Res() res: IResponse,
-    @Param() params: { id: string },
-  ): Promise<any> {
-    // try {
-    const user = await this.userService.deleteUser({ user_id: params.id });
-    return user;
-    //   res.ok(user);
-    // } catch (error) {
-    //   res.err(error);
-    // }
-  }
 
   /** lấy tất cả todo */
   @Get('todo')
