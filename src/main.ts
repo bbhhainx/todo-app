@@ -12,7 +12,7 @@ async function bootstrap() {
     }),
   );
   const { httpAdapter } = app.get(HttpAdapterHost);
-  // app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
+  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
   await app.listen(3000);
 }
 bootstrap();

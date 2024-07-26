@@ -29,6 +29,7 @@ import { PrismaClientErrorFilter } from './filters/prisma-exception.filter';
 
 @Controller()
 @UseFilters(new PrismaClientErrorFilter())
+@UseGuards(AuthGuard)
 export class AppController {
   constructor(
     private readonly appService: AppService,
@@ -39,7 +40,6 @@ export class AppController {
 
   /** lấy tất cả todo */
   @Get('todo')
-  @UseGuards(AuthGuard)
   async getAllTodo(@Res() res: IResponse): Promise<void> {
     try {
       const todo = await this.todoService.todos({});
@@ -51,7 +51,6 @@ export class AppController {
 
   /** tạo mới todo */
   @Post('todo')
-  @UseGuards(AuthGuard)
   async createTodo(
     @Res() res: IResponse,
     @Body() todoData: TodoCreateDTO,
@@ -66,7 +65,6 @@ export class AppController {
 
   /** cập nhật todo */
   @Put('todo/:id')
-  @UseGuards(AuthGuard)
   async updateTodo(
     @Res() res: IResponse,
     @Body() todoData: TodoCreateDTO,
@@ -84,7 +82,6 @@ export class AppController {
   }
   /** xóa todo */
   @Delete('todo/:id')
-  @UseGuards(AuthGuard)
   async deleteTodo(
     @Res() res: IResponse,
     @Param() params: { id: string },
@@ -99,7 +96,6 @@ export class AppController {
 
   /** lấy tất cả danh mục */
   @Get('category')
-  @UseGuards(AuthGuard)
   async getAllCategory(@Res() res: IResponse): Promise<void> {
     try {
       const category = await this.categoryService.categories({});
@@ -111,7 +107,6 @@ export class AppController {
 
   /** tạo danh mục */
   @Post('category')
-  @UseGuards(AuthGuard)
   async createCategory(
     @Res() res: IResponse,
     @Body() categoryData: CategoryCreateDTO,
@@ -126,7 +121,6 @@ export class AppController {
 
   /** cập nhật danh mục */
   @Put('category/:id')
-  @UseGuards(AuthGuard)
   async updateCategory(
     @Res() res: IResponse,
     @Body() categoryData: CategoryCreateDTO,
@@ -144,7 +138,6 @@ export class AppController {
   }
   /** xóa danh mục */
   @Delete('category/:id')
-  @UseGuards(AuthGuard)
   async deleteCategory(
     @Res() res: IResponse,
     @Param() params: { id: string },

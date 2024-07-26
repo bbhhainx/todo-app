@@ -30,21 +30,21 @@ export class UserController {
   }
 
   /** tạo mới tài khoản người dùng */
-  @Post('user')
-  @UseGuards(AuthGuard)
-  async signupUser(
-    @Res() res: IResponse,
-    @Body() userData: UserCreateDTO,
-  ): Promise<void> {
-    try {
-      const user = await this.userService.createUser(userData);
+  // @Post('user')
+  // @UseGuards(AuthGuard)
+  // async signupUser(
+  //   @Res() res: IResponse,
+  //   @Body() userData: UserCreateDTO,
+  // ): Promise<void> {
+  //   try {
+  //     const user = await this.userService.createUser(userData);
 
-      if (!user) throw 'Tạo tài khoản mới thất bại';
-      res.ok(user); // Trả về response thành công với user
-    } catch (error) {
-      res.err(error); // Trả về response lỗi với thông báo lỗi
-    }
-  }
+  //     if (!user) throw 'Tạo tài khoản mới thất bại';
+  //     res.ok(user); // Trả về response thành công với user
+  //   } catch (error) {
+  //     res.err(error); // Trả về response lỗi với thông báo lỗi
+  //   }
+  // }
   /** cập nhật tài khoản */
   @Put('user/:id')
   @UseGuards(AuthGuard)
