@@ -1,4 +1,5 @@
 import {
+  All,
   Body,
   Controller,
   Delete,
@@ -26,6 +27,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { Res } from './decorator/response.decorator';
 import { IResponse } from './interface/response';
 import { PrismaClientErrorFilter } from './filters/prisma-exception.filter';
+import { AllParams } from './decorator/params.decorator';
 
 @Controller()
 @UseFilters(new PrismaClientErrorFilter())
@@ -37,6 +39,15 @@ export class AppController {
     private readonly todoService: TodoService,
     private readonly categoryService: CategoryService,
   ) {}
+
+  @All('all-params/:param')
+  async getAllParams(@AllParams() params: {
+    body: string
+    param: string
+    query: string
+  }): Promise<string> {
+    return "All Params: " + JSON.stringify(params);
+  }
 
   /** lấy tất cả todo */
   @Get('todo')
