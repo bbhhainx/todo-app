@@ -13,8 +13,6 @@ export class TodoCreateDTO {
   @IsNotEmpty()
   @IsEnum(STATUS)
   status: STATUS;
-
-  @IsNotEmpty()
-  @IsString()
+  
   user_id: string;
 }

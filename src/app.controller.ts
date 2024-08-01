@@ -6,9 +6,11 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Param,
   Post,
   Put,
+  Request,
   UnauthorizedException,
   UseFilters,
   UseGuards,
@@ -41,12 +43,10 @@ export class AppController {
   ) {}
 
   @All('all-params/:param')
-  async getAllParams(@AllParams() params: {
-    body: string
-    param: string
-    query: string
-  }): Promise<string> {
-    return "All Params: " + JSON.stringify(params);
+  async getAllParams(
+    @AllParams() params: { body: string; param: string; query: string },
+  ): Promise<string> {
+    return 'All Params: ' + JSON.stringify(params);
   }
 
   /** lấy tất cả todo */
@@ -65,9 +65,17 @@ export class AppController {
   async createTodo(
     @Res() res: IResponse,
     @Body() todoData: TodoCreateDTO,
+    @Request() req: any,
   ): Promise<void> {
     try {
-      const todo = await this.todoService.createtTodo(todoData);
+      const user = await this.userService.user({ user_id: req.user.sub });
+      /** kiểm tra user có tồn tại không */
+      if (!user) throw new NotFoundException('User not found');
+      /** tạo todo */
+      const todo = await this.todoService.createtTodo({
+        ...todoData,
+        user_id: user.user_id,
+      });
       res.ok(todo);
     } catch (error) {
       res.err(error);
@@ -80,8 +88,15 @@ export class AppController {
     @Res() res: IResponse,
     @Body() todoData: TodoCreateDTO,
     @Param() params: { id: string },
+    @Request() req: any,
   ): Promise<void> {
     try {
+      /** kiểm tra todo có tồn tại không */
+      const is_exist = await this.todoService.todo({ todo_id: params.id });
+      if (!is_exist) throw new NotFoundException('Todo not found');
+      /** kiểm tra user có thể sửa không */
+      if(is_exist.user_id !== req.user.sub) throw new UnauthorizedException('Unauthorized');
+      /** cập nhật todo */
       const todo = await this.todoService.updateTodo({
         where: { todo_id: params.id },
         data: todoData,

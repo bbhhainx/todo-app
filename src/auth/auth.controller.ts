@@ -7,12 +7,15 @@ import {
   Request,
   Get,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Res } from 'src/decorator/response.decorator';
 import { RefreshJwtGuard } from './refreshJwt.guard';
+import { FormatResponseInterceptor } from 'src/interceptor/response.interceptor';
 
 @Controller('auth')
+@UseInterceptors(FormatResponseInterceptor)
 export class AuthController {
   constructor(private authService: AuthService) {}
 

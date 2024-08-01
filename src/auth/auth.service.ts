@@ -29,7 +29,7 @@ export class AuthService {
     return {
       access_token: await this.jwtService.signAsync(payload),
       refresh_token: await this.jwtService.signAsync(payload, {
-        expiresIn: '120s',
+        expiresIn: '7d',
       }),
     };
   }
@@ -60,7 +60,7 @@ export class AuthService {
       return {
         access_token: await this.jwtService.signAsync(payload),
         refresh_token: await this.jwtService.signAsync(payload, {
-          expiresIn: '120s',
+          expiresIn: '7d',
         }),
       };
     } catch (error) {
