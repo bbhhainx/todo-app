@@ -48,7 +48,7 @@ export class AuthService {
     };
 
     const user = await this.userService.createUser(data);
-    return { message: 'Tạo tài khoảng thành công' };
+    return { message: 'Tạo tài khoản thành công' };
   }
 
   async refreshToken(user: any): Promise<any> {

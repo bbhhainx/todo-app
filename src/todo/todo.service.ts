@@ -1,6 +1,11 @@
-import { Injectable, UseFilters } from '@nestjs/common';
-import { PrismaService } from './prisma/prisma.service';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+  UseFilters,
+} from '@nestjs/common';
 import { Prisma, Todo } from '@prisma/client';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { TodoCreateDTO } from './todo.dto';
 
 @Injectable()
@@ -56,5 +61,18 @@ export class TodoService {
     return this.prisma.todo.delete({
       where,
     });
+  }
+
+  /** kiểm tra todo và user */
+  async checkTodoAndUser(params: { id: string }, req: any): Promise<boolean> {
+    const is_exist = await this.todo({ todo_id: params.id });
+    // * kiểm tra todo có tồn tại không
+    if (!is_exist) throw new NotFoundException('Todo not found');
+
+    /** kiểm tra user có quyền chỉnh sửa todo này không */
+    if (is_exist.user_id !== req.user.sub)
+      throw new UnauthorizedException('Unauthorized');
+
+    return true;
   }
 }

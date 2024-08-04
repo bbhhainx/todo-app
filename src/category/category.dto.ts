@@ -5,10 +5,7 @@ export class CategoryCreateDTO {
   @IsString()
   category_name: string;
 
-  @IsNotEmpty()
-  @IsString()
   user_id: string;
-
   @IsString()
   description: string;
 }

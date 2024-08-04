@@ -6,7 +6,6 @@ export class TodoCreateDTO {
   @IsString()
   title: string;
 
-  @IsNotEmpty()
   @IsString()
   description: string;
 
