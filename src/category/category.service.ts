@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { Category, Prisma } from '@prisma/client';
 import { CategoryCreateDTO } from './category.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -55,5 +55,18 @@ export class CategoryService {
     return this.prisma.category.delete({
       where,
     });
+  }
+
+  /** kiểm tra category và user */
+  async checkCategoryAndUser(params: { id: string }, req: any): Promise<boolean> {
+    const is_exist = await this.category({ category_id: params.id });
+    // * kiểm tra todo có tồn tại không
+    if (!is_exist) throw new NotFoundException('Todo not found');
+
+    /** kiểm tra user có quyền chỉnh sửa todo này không */
+    if (is_exist.user_id !== req.user.sub)
+      throw new UnauthorizedException('Unauthorized');
+
+    return true;
   }
 }

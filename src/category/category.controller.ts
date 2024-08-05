@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Req, UseFilters, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Request, UseFilters, UseGuards } from '@nestjs/common';
 import { Res } from 'src/decorator/response.decorator';
 import { IResponse } from 'src/interface/response';
 import { CategoryCreateDTO } from './category.dto';
@@ -17,9 +17,12 @@ export class CategoryController {
   ) {}
   /** lấy tất cả danh mục */
   @Get('category')
-  async getAllCategory(@Res() res: IResponse): Promise<void> {
+  async getAllCategory(@Res() res: IResponse, @Request() req: any): Promise<void> {
     try {
-      const category = await this.categoryService.categories({});
+      // lấy ra các bản ghi danh mục mà người dùng hiện tại đã tạo
+      const category = await this.categoryService.categories({
+        where: { user_id: req.user.sub },
+      });
       res.ok(category);
     } catch (error) {
       res.err(error);
@@ -31,7 +34,7 @@ export class CategoryController {
   async createCategory(
     @Res() res: IResponse,
     @Body() categoryData: CategoryCreateDTO,
-    @Req() req: any
+    @Request() req: any
   ): Promise<void> {
     try {
       const user = await this.userService.user({ user_id: req.user.sub });
@@ -54,8 +57,13 @@ export class CategoryController {
     @Res() res: IResponse,
     @Body() categoryData: CategoryCreateDTO,
     @Param() params: { id: string },
+    @Request() req: any
   ): Promise<void> {
     try {
+      // kiểm tra tồn tại của danh mục và quyền chỉnh sửa của user
+      await this.categoryService.checkCategoryAndUser(params, req);
+
+      // chỉnh sửa danh mục
       const category = await this.categoryService.updateCategory({
         where: { category_id: params.id },
         data: categoryData,
@@ -70,8 +78,13 @@ export class CategoryController {
   async deleteCategory(
     @Res() res: IResponse,
     @Param() params: { id: string },
+    @Request() req: any
   ): Promise<void> {
     try {
+      // kiểm tra tồn tại của danh mục và quyền chỉnh sửa của user
+      await this.categoryService.checkCategoryAndUser(params, req);
+
+      //xóa danh mục
       const category = await this.categoryService.deleteCategory({
         category_id: params.id,
       });

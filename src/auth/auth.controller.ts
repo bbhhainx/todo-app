@@ -32,7 +32,7 @@ export class AuthController {
   @UseGuards(RefreshJwtGuard)
   @HttpCode(HttpStatus.OK)
   @Get('refresh')
-  refreshToken(@Request() user: any) {
-    return this.authService.refreshToken(user);
+  refreshToken(@Request() req: any) {
+    return this.authService.refreshToken(req.user);
   }
 }

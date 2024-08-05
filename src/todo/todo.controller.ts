@@ -73,6 +73,7 @@ export class TodoController {
     @Request() req: any,
   ): Promise<void> {
     try {
+      // kiểm tra tồn tại của todo và quyền chỉnh sửa của user
       await this.todoService.checkTodoAndUser(params, req);
 
       /** cập nhật todo */
@@ -93,6 +94,7 @@ export class TodoController {
     @Request() req: any,
   ): Promise<void> {
     try {
+      // kiểm tra tồn tại của todo và quyền chỉnh sửa của user
       await this.todoService.checkTodoAndUser(params, req);
 
       // * xóa todo
